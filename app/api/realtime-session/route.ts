@@ -1,10 +1,10 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const MODEL = "gpt-realtime-mini";
 const REALTIME_SESSION_ENDPOINT = "https://api.openai.com/v1/realtime/sessions";
 
-export async function POST(_request: NextRequest) {
+export async function POST(request: Request) {
   if (!OPENAI_API_KEY) {
     return NextResponse.json(
       { error: "Missing OPENAI_API_KEY in environment variables." },
@@ -13,6 +13,34 @@ export async function POST(_request: NextRequest) {
   }
 
   try {
+    const payload = await request
+      .json()
+      .catch(() => ({} as { instructions?: unknown }));
+    const instructions =
+      typeof payload?.instructions === "string"
+        ? payload.instructions.trim()
+        : undefined;
+
+    const sessionRequest: Record<string, unknown> = {
+      model: MODEL,
+      modalities: ["text", "audio"],
+      voice: "verse",
+      turn_detection: {
+        type: "server_vad",
+        threshold: 0.5,
+        prefix_padding_ms: 300,
+        silence_duration_ms: 400,
+        create_response: true,
+      },
+      input_audio_transcription: {
+        model: "whisper-1",
+      },
+    };
+
+    if (instructions) {
+      sessionRequest.instructions = instructions;
+    }
+
     const openAiResponse = await fetch(REALTIME_SESSION_ENDPOINT, {
       method: "POST",
       headers: {
@@ -20,12 +48,7 @@ export async function POST(_request: NextRequest) {
         "Content-Type": "application/json",
         "OpenAI-Beta": "realtime=v1",
       },
-      body: JSON.stringify({
-        model: MODEL,
-        modalities: ["text"],
-        // Voice is optional, but making it explicit helps when you upgrade to audio later.
-        voice: "verse",
-      }),
+      body: JSON.stringify(sessionRequest),
     });
 
     if (!openAiResponse.ok) {
