@@ -1,0 +1,11 @@
+# See https://nextjs.org/docs/app/building-your-application/configuring/eslint#linting
+.next/
+node_modules/
+.env.local
+.env.production
+.env.development
+*.log
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+*.tsbuildinfo

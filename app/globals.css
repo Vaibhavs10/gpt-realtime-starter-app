@@ -1,0 +1,224 @@
+:root {
+  color-scheme: dark;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background-color: #090b11;
+  color: #f1f5ff;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-image: radial-gradient(circle at 10% -20%, #122b60 0%, transparent 50%), radial-gradient(circle at 90% 0%, #6225e6 0%, transparent 55%), radial-gradient(ellipse at 50% 120%, rgba(24, 32, 56, 0.7), #090b11 65%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 1.5rem;
+  color: inherit;
+}
+
+h1 {
+  font-size: clamp(2rem, 2vw + 1.6rem, 3.4rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+p {
+  margin: 0;
+  color: rgba(235, 240, 255, 0.72);
+  max-width: 42rem;
+}
+
+.layout {
+  width: min(820px, 100%);
+  display: grid;
+  gap: 2rem;
+  backdrop-filter: blur(18px);
+  background: rgba(12, 16, 28, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 22px;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  box-shadow: 0 40px 80px rgba(5, 8, 18, 0.75);
+}
+
+.stack {
+  display: grid;
+  gap: 1rem;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.links a {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  color: inherit;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: background 160ms ease, border 160ms ease, transform 160ms ease;
+}
+
+.links a:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.panel {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.btn {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  padding: 0.65rem 1.4rem;
+  font-weight: 600;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 150ms ease, transform 150ms ease, border 150ms ease;
+}
+
+.btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.16);
+  transform: translateY(-1px);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn.primary {
+  background: linear-gradient(135deg, #3a74ff 0%, #7a46ff 100%);
+  border: none;
+  color: #f7f9ff;
+  box-shadow: 0 12px 25px rgba(58, 116, 255, 0.35);
+}
+
+.btn.primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #4f83ff 0%, #8f56ff 100%);
+}
+
+.btn.accent {
+  background: rgba(34, 197, 143, 0.18);
+  border-color: rgba(34, 197, 143, 0.35);
+}
+
+.btn.accent:hover:not(:disabled) {
+  background: rgba(34, 197, 143, 0.28);
+}
+
+.field {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.field span {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(235, 240, 255, 0.55);
+}
+
+textarea {
+  font: inherit;
+  color: #f1f5ff;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 1rem 1.25rem;
+  resize: vertical;
+  min-height: 130px;
+  line-height: 1.5;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+  transition: border 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: rgba(80, 130, 255, 0.6);
+  box-shadow: 0 0 0 2px rgba(80, 130, 255, 0.25);
+  background: rgba(12, 16, 28, 0.6);
+}
+
+.log {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1.1rem;
+  border-radius: 18px;
+  background: rgba(0, 0, 0, 0.32);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  max-height: 240px;
+  overflow-y: auto;
+  font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.85rem;
+  color: rgba(235, 240, 255, 0.82);
+}
+
+.log > div {
+  display: grid;
+  gap: 0.25rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.log > div:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.timestamp {
+  font-size: 0.75rem;
+  color: rgba(235, 240, 255, 0.5);
+}
+
+.footer {
+  font-size: 0.85rem;
+  color: rgba(235, 240, 255, 0.55);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+code {
+  font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  padding: 0.15rem 0.35rem;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 2rem 1rem;
+  }
+
+  .layout {
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
