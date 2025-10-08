@@ -2,16 +2,32 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-const MODEL = "gpt-realtime-mini";
+const MODEL_OPTIONS = [
+  { value: "gpt-realtime-mini", label: "gpt-realtime-mini" },
+  { value: "gpt-realtime", label: "gpt-realtime" },
+] as const;
+
+const VOICE_OPTIONS = [
+  { value: "verse", label: "verse" },
+  { value: "alloy", label: "alloy" },
+  { value: "ember", label: "ember" },
+  { value: "marin", label: "marin" },
+  { value: "cedar", label: "cedar" },
+] as const;
+
+type ModelValue = (typeof MODEL_OPTIONS)[number]["value"];
+type VoiceValue = (typeof VOICE_OPTIONS)[number]["value"];
 
 type SessionStage = "idle" | "connecting" | "live";
 
 export default function Home() {
   const [instructions, setInstructions] = useState(
-    "You are a concise realtime assistant. Greet the user, then answer with short, helpful replies."
+    "You are a realtime assistant. Greet the user, then answer briefly."
   );
+  const [model, setModel] = useState<ModelValue>(MODEL_OPTIONS[0].value);
+  const [voice, setVoice] = useState<VoiceValue>(VOICE_OPTIONS[0].value);
   const [stage, setStage] = useState<SessionStage>("idle");
-  const [status, setStatus] = useState("Tap the mic to start a realtime session.");
+  const [status, setStatus] = useState("Press the mic to start a session.");
   const [error, setError] = useState<string | null>(null);
   const [autoPlayBlocked, setAutoPlayBlocked] = useState(false);
   const [isAssistantSpeaking, setIsAssistantSpeaking] = useState(false);
@@ -122,6 +138,8 @@ export default function Home() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           instructions: instructions.trim() || undefined,
+          model,
+          voice,
         }),
       });
 
@@ -236,7 +254,7 @@ export default function Home() {
 
       setStatus("Connecting to OpenAI…");
       const sdpResponse = await fetch(
-        `https://api.openai.com/v1/realtime?model=${MODEL}`,
+        `https://api.openai.com/v1/realtime?model=${model}`,
         {
           method: "POST",
           headers: {
@@ -268,12 +286,12 @@ export default function Home() {
       setStatus("Tap the mic to try again.");
       teardownSession();
     }
-  }, [ensureMicrophone, instructions, stage, teardownSession]);
+  }, [ensureMicrophone, instructions, model, stage, teardownSession, voice]);
 
   const stopSession = useCallback(() => {
     teardownSession();
     setError(null);
-    setStatus("Tap the mic to start a realtime session.");
+    setStatus("Press the mic to start a session.");
   }, [teardownSession]);
 
   const toggleSession = useCallback(() => {
@@ -326,9 +344,9 @@ export default function Home() {
   return (
     <main className="voice-shell">
       <div className="voice-card">
-        <h1>GPT Realtime Mini</h1>
+        <h1>gpt-realtime-mini voice demo</h1>
         <p className="subtitle">
-          Provide an instruction preset, then hold a low-latency voice exchange powered by the Realtime API.
+          Choose a model and voice, set instructions, then start a voice session with the Realtime API.
         </p>
 
         <label className="field">
@@ -336,9 +354,37 @@ export default function Home() {
           <textarea
             rows={3}
             value={instructions}
-            placeholder="E.g. Act as an enthusiastic demo guide who keeps responses under 20 words."
+            placeholder="Example: Act as a demo guide who keeps responses under 20 words."
             onChange={(event) => setInstructions(event.target.value)}
           />
+        </label>
+
+        <label className="field">
+          <span>Model</span>
+          <select
+            value={model}
+            onChange={(event) => setModel(event.target.value as ModelValue)}
+          >
+            {MODEL_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label className="field">
+          <span>Voice</span>
+          <select
+            value={voice}
+            onChange={(event) => setVoice(event.target.value as VoiceValue)}
+          >
+            {VOICE_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </label>
 
         <button

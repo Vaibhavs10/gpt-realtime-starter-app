@@ -1,8 +1,16 @@
 import { NextResponse } from "next/server";
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-const MODEL = "gpt-realtime-mini";
 const REALTIME_SESSION_ENDPOINT = "https://api.openai.com/v1/realtime/sessions";
+const DEFAULT_MODEL = "gpt-realtime-mini";
+const SUPPORTED_MODELS = new Set(["gpt-realtime-mini", "gpt-realtime"]);
+const SUPPORTED_VOICES = new Set([
+  "verse",
+  "alloy",
+  "ember",
+  "marin",
+  "cedar",
+]);
 
 export async function POST(request: Request) {
   if (!OPENAI_API_KEY) {
@@ -21,10 +29,24 @@ export async function POST(request: Request) {
         ? payload.instructions.trim()
         : undefined;
 
+    const requestedModel =
+      typeof payload?.model === "string" ? payload.model : undefined;
+    const model =
+      requestedModel && SUPPORTED_MODELS.has(requestedModel)
+        ? requestedModel
+        : DEFAULT_MODEL;
+
+    const requestedVoice =
+      typeof payload?.voice === "string" ? payload.voice : undefined;
+    const voice =
+      requestedVoice && SUPPORTED_VOICES.has(requestedVoice)
+        ? requestedVoice
+        : "verse";
+
     const sessionRequest: Record<string, unknown> = {
-      model: MODEL,
+      model,
       modalities: ["text", "audio"],
-      voice: "verse",
+      voice,
       turn_detection: {
         type: "server_vad",
         threshold: 0.5,

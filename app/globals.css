@@ -71,20 +71,30 @@ p {
   color: rgba(226, 234, 255, 0.55);
 }
 
-textarea {
+textarea,
+select {
   font: inherit;
   color: inherit;
   background: rgba(0, 0, 0, 0.28);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 18px;
   padding: 1rem 1.15rem;
-  resize: vertical;
-  min-height: 120px;
   line-height: 1.5;
   transition: border 160ms ease, box-shadow 160ms ease, background 160ms ease;
 }
 
-textarea:focus {
+textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+select {
+  appearance: none;
+  cursor: pointer;
+}
+
+textarea:focus,
+select:focus {
   outline: none;
   border-color: rgba(102, 136, 255, 0.85);
   background: rgba(16, 23, 43, 0.92);
